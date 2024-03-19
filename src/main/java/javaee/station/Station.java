@@ -2,6 +2,7 @@ package javaee.station;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Station {
     private String id;
@@ -11,6 +12,8 @@ public class Station {
     private String ville; // Ville
     private String adresse; // Adresse
     private List<String> services = new ArrayList<>();
+    private Map<String, String> openingHours;
+    private Map<String, Double> fuelPrices;
     // Constructeur par défaut
     public Station() {
     }
@@ -88,5 +91,21 @@ public class Station {
             // Retourner une valeur par défaut ou lancer une exception selon votre logique d'application
             return 0; // Valeur par défaut si la longitude est vide
         }
+    }
+    
+    public Map<String, String> getOpeningHours() {
+        return openingHours;
+    }
+    
+    public void setOpeningHours(Map<String, String> openingHours) {
+        this.openingHours = openingHours;
+    }
+    
+    public Map<String, Double> getFuelPrices() {
+        return fuelPrices;
+    }
+    
+    public void setFuelPrices(Map<String, Double> fuelPrices) {
+        this.fuelPrices = fuelPrices;
     }
 }

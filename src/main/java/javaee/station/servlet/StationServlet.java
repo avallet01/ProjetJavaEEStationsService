@@ -33,9 +33,12 @@ public class StationServlet extends HttpServlet {
 		
 		        response.setContentType("text/html");
 		        response.setCharacterEncoding("UTF-8");
+		        String realPath = getServletContext().getRealPath("/WEB-INF/PrixCarburants_annuel_2024.xml");		
+		        System.out.println("Real path of the application: " + realPath);
+		        StationDao dao = new StationDao();
 
 		        StationDao stationDao = new StationDao();
-		        List<Station> stations = stationDao.getAllStations();
+		        List<Station> stations = stationDao.getAllStations(realPath);
 
 		        try (PrintWriter out = response.getWriter()) {
 		            out.println("<!DOCTYPE html>");
@@ -89,12 +92,22 @@ public class StationServlet extends HttpServlet {
 		            out.println("    L.marker(userLocation).addTo(map).bindPopup('Vous êtes ici').openPopup();");
 		            out.println("    var markers = L.markerClusterGroup();");
 
-		            // Itérer sur la liste des stations et créer des marqueurs
+		            // Iterating over the list of stations and creating markers
 		            for (Station station : stations) {
-		            	String ville = station.getVille().replace("'", "\\'").replace("\"", "&quot;");
-		            	String adresse = station.getAdresse().replace("'", "\\'").replace("\"", "&quot;");
+		                String ville = station.getVille().replace("'", "\\'").replace("\"", "&quot;");
+		                String adresse = station.getAdresse().replace("'", "\\'").replace("\"", "&quot;");
+		                StringBuilder popupContent = new StringBuilder();
+		                popupContent.append("<b>").append(ville).append("</b><br>").append(adresse).append("<br><br><b>Opening Hours:</b><br>");
+		                station.getOpeningHours().forEach((day, hours) -> popupContent.append(day).append(": ").append(hours).append("<br>"));
+		                if (station.getServices() != null && !station.getServices().isEmpty()) {
+		                    popupContent.append("<br><b>Services:</b><br>");
+		                    station.getServices().forEach(service -> popupContent.append(service.replace("'", "\\'").replace("\"", "&quot;")).append("<br>"));
+		                }
+		                popupContent.append("<br><b>Fuel Prices:</b><br>");
+		                station.getFuelPrices().forEach((fuel, price) -> popupContent.append(fuel).append(": ").append(price).append("€<br>"));
+		                String popupContentStr = popupContent.toString().replace("\n", " ");
 		                out.println("    var marker = L.marker([" + station.getLatitudeInDegrees() + ", " + station.getLongitudeInDegrees() + "]);");
-		                out.println("marker.bindPopup('<b>" + ville + "</b><br>" + adresse + "');");
+		                out.println("    marker.bindPopup('" + popupContentStr + "');");
 		                out.println("    var stationLocation = [" + station.getLatitudeInDegrees() + ", " + station.getLongitudeInDegrees() + "];");
 		                out.println("    if (map.distance(userLocation, stationLocation) <= distance * 1000) {");
 		                out.println("        markers.addLayer(marker);");
@@ -115,6 +128,7 @@ public class StationServlet extends HttpServlet {
 		            out.println("</body>");
 		            out.println("</html>");
 		        }
+
 
 
 	}

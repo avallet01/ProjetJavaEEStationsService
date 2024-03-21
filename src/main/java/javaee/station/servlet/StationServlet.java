@@ -131,9 +131,27 @@ public class StationServlet extends HttpServlet {
 
 		            // Function to build the popup content for markers
 		            out.println("function buildPopupContent(station) {");
-		            out.println("    var content = '<b>' + station.ville + '</b><br>' + station.adresse + '<br><br><b>Services:</b><br>' + station.services.join(', ') + '<br><br><b>Opening Hours:</b><br>' + JSON.stringify(station.openingHours) + '<br><br><b>Fuel Prices:</b><br>' + JSON.stringify(station.fuelPrices);");
+		            out.println("    var content = '<b>' + station.ville + '</b><br>' + station.adresse + '<br><br><b>Opening Hours:</b><br>';");
+
+		            // Adding opening hours
+		            out.println("    for (var day in station.openingHours) {");
+		            out.println("        content += day + ': ' + station.openingHours[day] + '<br>';");
+		            out.println("    }");
+
+		            // Adding services if available
+		            out.println("    if (station.services && station.services.length > 0) {");
+		            out.println("        content += '<br><b>Services:</b><br>' + station.services.join(', ') + '<br>';"); // Assuming services is an array
+		            out.println("    }");
+
+		            // Adding fuel prices
+		            out.println("    content += '<br><b>Fuel Prices:</b><br>';");
+		            out.println("    for (var fuel in station.fuelPrices) {");
+		            out.println("        content += fuel + ': ' + station.fuelPrices[fuel] + '€<br>';");
+		            out.println("    }");
+
 		            out.println("    return content;");
 		            out.println("}");
+
 
 		            // Initializing stations array with data
 		            out.println("var stations = " + getStationsAsJson(stations) + ";");

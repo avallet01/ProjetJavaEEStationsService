@@ -18,74 +18,38 @@ public class Station {
     private Map<String, String> openingHours; // Horaires d'ouverture
     private Map<String, Double> fuelPrices; // Prix des carburants
 
-    /**
-     * Constructeur par défaut de la classe Station.
-     */
     public Station() {
     }
 
-    // Getters et Setters avec des commentaires Javadoc pour chaque méthode
 
-    /**
-     * Obtient l'ID de la station.
-     * @return ID de la station.
-     */
     public String getId() {
         return id;
     }
 
-    /**
-     * Obtient la latitude de la station.
-     * @return Latitude de la station.
-     */
     public String getLatitude() {
         return latitude;
     }
 
-    /**
-     * Obtient la longitude de la station.
-     * @return Longitude de la station.
-     */
     public String getLongitude() {
         return longitude;
     }
 
-    /**
-     * Obtient le code postal de la station.
-     * @return Code postal de la station.
-     */
     public String getCp() {
         return cp;
     }
 
-    /**
-     * Obtient la ville où se trouve la station.
-     * @return Ville de la station.
-     */
     public String getVille() {
         return ville;
     }
 
-    /**
-     * Obtient l'adresse de la station.
-     * @return Adresse de la station.
-     */
     public String getAdresse() {
         return adresse;
     }
 
-    /**
-     * Obtient la liste des services disponibles à la station.
-     * @return Liste des services.
-     */
     public List<String> getServices() {
         return services;
     }
 
-    /**
-     * Définit les services disponibles à la station.
-     * @param services Les services à définir.
-     */
     public void setServices(List<String> services) {
         this.services = services;
     }

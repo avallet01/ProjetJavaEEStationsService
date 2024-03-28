@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.*" %>
 <%@ page import="javaee.station.Station" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,21 +19,12 @@
         <h1>Stations-service à proximité</h1>
         <input type="number" id="distance" class="form-control" placeholder="Entrez la distance en km" value="5">
         <button id="findStations" class="btn btn-primary mt-2">Trouver des stations</button>
-        <select id="services" class="form-control mt-2">
-    <option value="">Tous les services</option>
-    <% 
-    Set<String> allServices = (Set<String>) request.getAttribute("allServices");
-    if (allServices != null) {
-        for (String service : allServices) { 
-    %>
-            <option value="<%= service %>"><%= service %></option>
-    <% 
-        }
-    } 
-    %>
-</select>
-        
-        
+         <select id="services" class="form-control mt-2">
+        <option value="">Tous les services</option>
+        <c:forEach items="${allServices}" var="service"> <!-- Use c:forEach to iterate over services -->
+            <option value="${service}">${service}</option>
+        </c:forEach>
+    </select>
         <div id="map" class="mt-3"></div>
     </div>
 
@@ -42,26 +34,26 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-<script>
-    var stations = <%= (String) request.getAttribute("stationsJson") %>;
-    var map = L.map('map').setView([46.2276, 2.2137], 6);
-    var markers = L.markerClusterGroup();
+    <script>
+        var stations = <%= (String) request.getAttribute("stationsJson") %>;
+        var map = L.map('map').setView([46.2276, 2.2137], 6);
+        var markers = L.markerClusterGroup();
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
 
-    var userLocation;
-    if ('geolocation' in navigator) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            userLocation = [position.coords.latitude, position.coords.longitude];
-            L.marker(userLocation).addTo(map).bindPopup('Vous êtes ici').openPopup();
-            map.setView(userLocation, 13);
-        }, function(error) {
-            console.error("Geolocation error: " + error.message);
-        });
-    }
+        var userLocation;
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                userLocation = [position.coords.latitude, position.coords.longitude];
+                L.marker(userLocation).addTo(map).bindPopup('Vous êtes ici').openPopup();
+                map.setView(userLocation, 13);
+            }, function(error) {
+                console.error("Geolocation error: " + error.message);
+            });
+        }
 
     function findAndDisplayStations(distance, serviceFilter) {
         // Suppression de tous les marqueurs précédents
